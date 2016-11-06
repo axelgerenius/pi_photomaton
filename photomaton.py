@@ -4,12 +4,15 @@ import sys
 import time
 import RPi.GPIO as GPIO
 from enum import Enum
+from subprocess import call
 
 RED_LED_GPIO = 17
 BLUE_LED_GPIO = 22
 GREEN_LED_GPIO = 27
 
 BUTTON_GPIO = 4
+
+FILE_SAVE_PATH = "/share/www/images/"
 
 GPIO.setmode(GPIO.BCM)
 
@@ -75,14 +78,24 @@ def initGPIO():
 
 	GPIO.setup(BUTTON_GPIO, GPIO.IN)
 
+def capture():
+	applyColor(Color.Cyan)
+	filename = FILE_SAVE_PATH + time.strftime('%d-%m-%y_%H-%M-%S') + ".jpg"
+	call(["fswebcam", "--no-banner", "-r 1080x1920", "-S 10", filename ])
+	call(["cp", filename, FILE_SAVE_PATH + "last.jpg"])
+
+
+	applyColor(Color.Red)
+	time.sleep(3)
+	applyColor(Color.Green)
 
 def main():
 	initGPIO()
+	applyColor(Color.Green)
 	while True:
 		if buttonPressed() == True:
-			applyColor(Color.Green)
-		else:
-			applyColor(Color.Red)
+			capture()
+
 		time.sleep(10/1000)
 
 
