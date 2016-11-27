@@ -14,6 +14,7 @@ BUTTON_GPIO = 4
 
 FILE_SAVE_PATH = "/share/www/images/"
 
+GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
 class Color(Enum):
