@@ -82,7 +82,7 @@ def initGPIO():
 def capture():
 	applyColor(Color.Cyan)
 	filename = FILE_SAVE_PATH + time.strftime('%d-%m-%y_%H-%M-%S') + ".jpg"
-	call(["fswebcam", "--no-banner", "-r 1080x1920", "-S 10", filename ])
+	call(["raspistill", "-o", filename ])
 	call(["cp", filename, FILE_SAVE_PATH + "last.jpg"])
 
 
