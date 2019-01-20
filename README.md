@@ -21,3 +21,9 @@ accessible depuis l'adresse du PI
 Installation de hostapd (dongle wifi)
 apt-cache search dhcpd (donne les noms des serveurs dhcp viable pour le PI => on trouve isc-dhcp-server)
 installation de isc-dhcp-server (donnera des IP aux hotes qui se connecteront)
+
+
+Test mqtt
+:
+mosquitto_pub --host localhost --topic "photomaton/take" -m "go"
+mosquitto_sub --host localhost --topic "#"
