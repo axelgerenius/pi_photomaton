@@ -1,58 +1,68 @@
 #!/bin/bash
 
-WLAN_IFACE=wlan0
-ETH_IFACE=eth0
+#apt-get update && apt-get install -y python
 
-kill_photomaton()
-{
-        airmon-ng check kill
-        killall dhcpd
-        killall python
-	killall hostapd
-}
+MOSQUITTO_VER=mosquitto-1.4.14
 
-start()
-{
-	echo "Starting... network"
-	kill_photomaton
-	hostapd -B /share/pi_photomaton/hostapd.conf
+cd wifi-bridge-ap_variant
+./wifi-bridge-install.sh
+cd ..
 
-	ifconfig $WLAN_IFACE 10.0.0.254 255.255.255.0
+sudo apt-get update
 
-	dhcpd -cf /share/pi_photomaton/dhcpd.conf
-	echo 1 > /proc/sys/net/ipv4/ip_forward
-	
+sudo apt-get install -y python3 \
+python-pip \
+python3-pip \
+build-essential \
+python \
+quilt \
+devscripts \
+python-setuptools \
+python3 \
+libssl-dev \
+cmake \
+libc-ares-dev \
+uuid-dev \
+daemon \
+zlibc \
+zlib1g \
+zlib1g-dev
 
-	iptables -t nat -A POSTROUTING -o $ETH_IFACE -j MASQUERADE
-	iptables -A FORWARD -i $ETH_IFACE -o $WLAN_IFACE -m state --state RELATED,ESTABLISHED -j ACCEPT
-	iptables -A FORWARD -i $WLAN_IFACE -o $ETH_IFACE -j ACCEPT
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
-	iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 10.0.0.254:80
-        iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination 10.0.0.254:80
+sudo pip install RPi.GPIO
 
-	echo "Starting... photomaton"
+# Compile libwebsockets
+git clone https://github.com/warmcat/libwebsockets.git
+cd libwebsockets
+mkdir build
+cd build
+cmake .. && sudo make install && sudo ldconfig
 
-	/share/pi_photomaton/photomaton.py &
-}
+# Compile mosquitto
+mkdir ~/mosquitto
+cd ~/mosquitto/
 
-stop()
-{
-	echo "Stopping..."
-	kill_photomaton
-}
+wget https://mosquitto.org/files/source/$MOSQUITTO_VER.tar.gz
+tar zxvf $MOSQUITTO_VER.tar.gz
+cd $MOSQUITTO_VER
+
+sed -i 's/WITH_WEBSOCKETS:=no/WITH_WEBSOCKETS:=yes/g' config.mk
+
+make && sudo make install
+sudo cp mosquitto.conf /etc/mosquitto
+
+echo
+
+echo "port 1883" >> /etc/mosquitto/mosquitto.conf
+echo "listener 9001" >> /etc/mosquitto/mosquitto.conf
+echo "protocol websockets" >> /etc/mosquitto/mosquitto.conf
+echo "pid_file /var/run/mosquitto.pid" >> /etc/mosquitto/mosquitto.conf
+
+# Création d’un lien
+sudo ln -s /usr/local/sbin/mosquitto /bin/mosquitto
 
 
-case "$1" in
-  start)
-    start
-    ;;
-  stop)
-    stop
-    ;;
-  restart)
-    stop
-    start
-    ;;
-  *)
-    echo "Usage: $0 {start|stop|restart}"
-esac
+
+
+

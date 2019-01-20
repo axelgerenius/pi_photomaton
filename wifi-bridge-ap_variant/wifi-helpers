@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# ############################################################################
+# Author: 		Matthieu Holtz
+# Year:   		2017
+# Project: 		wifi bridge
+# Description: 		Script that contains helper functions for wifi 
+#			management scripts.
+# ############################################################################
+
+# Echo a message and add OK or NOK depending on status code.
+# $1 : the status code to check
+# $2 : the message to echo
+EchoStatus()
+{
+	if [ $1 -eq 0 ]; then
+  		#echo -e "$2...\t\t\t\e[42mOK\e[0m"
+  		printf '%s\e[1;34m%8s\e[m\n' "$2..." "[OK]"
+	else
+  		#echo -e "$2...\t\t\t\e[41mNOK\e[0m"
+  		printf '%s\e[1;34m%8s\e[m\n' "$2..." "[NOK]"
+	fi
+}
+
+# Kill the processes launched during wifi scripts execution
+KillProcess()
+{
+	killall hostapd
+	EchoStatus $? "Kill hostapd"
+
+	killall dhcpd
+	EchoStatus $? "Kill dhcpd"
+
+	killall wpa_supplicant
+	EchoStatus $?  "Kill wpa_supplicant"
+
+	killall dhclient
+	EchoStatus $?  "Kill dhclient"
+}

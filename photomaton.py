@@ -82,8 +82,8 @@ def initGPIO():
 def capture():
 	applyColor(Color.Cyan)
 	filename = FILE_SAVE_PATH + time.strftime('%d-%m-%y_%H-%M-%S') + ".jpg"
-	call(["raspistill", "-o", filename ])
-	call(["cp", filename, FILE_SAVE_PATH + "last.jpg"])
+	#call(["raspistill", "-o", filename ])
+	#call(["cp", filename, FILE_SAVE_PATH + "last.jpg"])
 
 
 	applyColor(Color.Red)
