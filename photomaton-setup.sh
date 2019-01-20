@@ -30,7 +30,7 @@ zlib1g-dev
 
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
-sudo pip install RPi.GPIO
+sudo pip install RPi.GPIO paho-mqtt
 
 # Compile libwebsockets
 git clone https://github.com/warmcat/libwebsockets.git

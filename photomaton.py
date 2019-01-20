@@ -3,6 +3,7 @@
 import sys
 import time
 import RPi.GPIO as GPIO
+import paho.mqtt.client as mqtt
 from enum import Enum
 from subprocess import call
 
@@ -13,6 +14,8 @@ GREEN_LED_GPIO = 27
 BUTTON_GPIO = 4
 
 FILE_SAVE_PATH = "/share/www/images/"
+
+client = mqtt.Client("pythonClient")
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -84,20 +87,35 @@ def capture():
 	filename = FILE_SAVE_PATH + time.strftime('%d-%m-%y_%H-%M-%S') + ".jpg"
 	#call(["raspistill", "-o", filename ])
 	#call(["cp", filename, FILE_SAVE_PATH + "last.jpg"])
-
-
+	client.publish("photomaton/newPhoto",filename)
 	applyColor(Color.Red)
 	time.sleep(3)
 	applyColor(Color.Green)
 
+def on_message(client, userdata, message):
+	print("message received " ,str(message.payload.decode("utf-8")))
+	print("message topic=",message.topic)
+	print("message qos=",message.qos)
+	print("message retain flag=",message.retain)
+	if message.topic == "photomaton/take" :
+		capture()
+
 def main():
 	initGPIO()
 	applyColor(Color.Green)
+
+	client.connect("localhost")
+	client.on_message=on_message #attach function to callback
+	client.loop_start() #start the loop
+	client.subscribe("photomaton/take")
+	client.publish("photomaton/started", "started")
 	while True:
 		if buttonPressed() == True:
-			capture()
+			client.publish("photomaton/button", "pressed")
+#			capture()
 
 		time.sleep(10/1000)
 
+	client.loop_stop() #stop the loop
 
 main()
