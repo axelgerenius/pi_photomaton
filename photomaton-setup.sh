@@ -4,6 +4,8 @@
 
 MOSQUITTO_VER=mosquitto-1.4.14
 
+WEB_WWW="/var/photomaton-www"
+
 cd wifi-bridge-ap_variant
 ./wifi-bridge-install.sh
 cd ..
@@ -62,7 +64,8 @@ echo "pid_file /var/run/mosquitto.pid" >> /etc/mosquitto/mosquitto.conf
 # Création d’un lien
 sudo ln -s /usr/local/sbin/mosquitto /bin/mosquitto
 
-
+# Copy the web UI to the server www
+cp -R ./ui/dist "$WEB_WWW"
 
 
 
