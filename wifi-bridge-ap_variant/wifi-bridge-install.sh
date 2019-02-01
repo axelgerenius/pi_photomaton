@@ -18,6 +18,7 @@ SAMBA_SHARE_PATH="/share"
 SAMBA_SHARE_PATH_LOG="/tmp/log"
 SAMBA_CONFIG_PATH="/etc/wifi-bridge/smb.conf"
 NGINX_CONFIG_PATH="/etc/wifi-bridge/nginx.conf"
+DATA_PATH_LOG="/var/photomaton-www"
 
 if [ -d "/etc/wifi-bridge" ]; then  
    rm -R "/etc/wifi-bridge"
@@ -223,6 +224,10 @@ sed -i '1s/^/# Generated on '"$timestamp"'\n/' "$SAMBA_CONFIG_PATH"
 EchoStatus $? "$SAMBA_CONFIG_PATH setting up=>"
 cat "$SAMBA_CONFIG_PATH"
 
+mkdir -p "$DATA_PATH_LOG"
+chmod 777 "$DATA_PATH_LOG"
+EchoStatus $? "Create $DATA_PATH_LOG"
+
 echo 'worker_processes  1;' > "$NGINX_CONFIG_PATH"
 echo 'pid /var/run/nginx.pid;' >> "$NGINX_CONFIG_PATH"
 echo 'events {' >> "$NGINX_CONFIG_PATH"
@@ -232,13 +237,21 @@ echo '' >> "$NGINX_CONFIG_PATH"
 echo 'http {' >> "$NGINX_CONFIG_PATH"
 
 echo '  server {' >> "$NGINX_CONFIG_PATH"
-echo '    listen 80;' >> "$NGINX_CONFIG_PATH"
-
+echo '    listen 8080;' >> "$NGINX_CONFIG_PATH"
 echo '    location / {' >> "$NGINX_CONFIG_PATH"
 echo "      root $SAMBA_SHARE_PATH_LOG;" >> "$NGINX_CONFIG_PATH"
 echo '      autoindex on;' >> "$NGINX_CONFIG_PATH"
 echo '    }' >> "$NGINX_CONFIG_PATH"
 echo '  }' >> "$NGINX_CONFIG_PATH"
+
+echo '  server {' >> "$NGINX_CONFIG_PATH"
+echo '    listen 80;' >> "$NGINX_CONFIG_PATH"
+echo '    location / {' >> "$NGINX_CONFIG_PATH"
+echo "      root $DATA_PATH_LOG;" >> "$NGINX_CONFIG_PATH"
+echo '      autoindex on;' >> "$NGINX_CONFIG_PATH"
+echo '    }' >> "$NGINX_CONFIG_PATH"
+echo '  }' >> "$NGINX_CONFIG_PATH"
+
 echo '}' >> "$NGINX_CONFIG_PATH"
 
 sed -i '1s/^/# Generated on '"$timestamp"'\n/' "$NGINX_CONFIG_PATH"
