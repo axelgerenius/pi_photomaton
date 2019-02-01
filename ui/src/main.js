@@ -1,15 +1,14 @@
 import Vue from "vue";
 import App from "./App.vue";
-import store from "./store";
 import VueMqtt from "vue-mqtt";
+import config from "./config";
 
-Vue.use(VueMqtt, "ws://localhost", {
+Vue.use(VueMqtt, config.mqttUrl, {
   clientId: "WebClient-" + parseInt(Math.random() * 100000)
 });
 
 Vue.config.productionTip = false;
 
 new Vue({
-  store,
   render: h => h(App)
 }).$mount("#app");

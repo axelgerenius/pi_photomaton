@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import config from "../config.js";
+
 export default {
   name: "pm-main",
   data() {
@@ -28,10 +30,10 @@ export default {
     }
   },
   mounted () {
-    this.$mqtt.subscribe('photomaton/take', {}, (err, granted) => {
+    this.$mqtt.subscribe(config.mqttEventTake, {}, (err, granted) => {
       console.log(err, granted);
       if (granted != null && granted.length > 0) {
-        if (granted[0] != null && granted[0].topic == "picture") {
+        if (granted[0] != null && granted[0].topic == config.mqttTopicTaken) {
           // TODO
         }
       }
@@ -64,7 +66,7 @@ export default {
       }, 1000);
     },
     takePhoto() {
-      this.$mqtt.publish('photomaton/take', 'go');
+      this.$mqtt.publish(config.mqttEventTake, 'go');
       setTimeout(() => this.showPhoto(), 1000);
     },
     showPhoto() {
