@@ -1,6 +1,5 @@
 export default {
-  mqttUrl: "ws://localhost",
-  mqttEventTake: "photomaton/take",
-  mqttEventTaken: "photomaton/taken",
-  mqttTopicTaken: "taken"
+  mqttUrl: `ws://${document.domain}:1883`,
+  mqttTopicTakePhoto: "photomaton/take",
+  mqttTopicPhotoTaken: "photomaton/newPhoto"
 }
