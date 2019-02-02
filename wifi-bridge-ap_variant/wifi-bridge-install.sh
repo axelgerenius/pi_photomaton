@@ -32,7 +32,7 @@ sudo apt-get update
 
 EchoStatus $? "Packet manager update"
 
-sudo apt-get -y install wireless-tools isc-dhcp-client isc-dhcp-server sed iptables samba nginx libssl-dev libnl2 libnl2-dev
+sudo apt-get -y install wireless-tools isc-dhcp-client isc-dhcp-server sed iptables samba nginx libssl-dev libnl2 libnl2-dev wget git make patch
 EchoStatus $? "Packet manager install dependencies"
 
 # Remove any previous hostapd files

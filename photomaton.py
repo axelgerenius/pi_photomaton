@@ -104,7 +104,7 @@ def main():
 	initGPIO()
 	applyColor(Color.Green)
 
-	client.connect("localhost")
+	client.connect("127.0.0.1")
 	client.on_message=on_message #attach function to callback
 	client.loop_start() #start the loop
 	client.subscribe("photomaton/take")

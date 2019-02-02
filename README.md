@@ -48,3 +48,14 @@ mosquitto_sub --host localhost --topic "#"
 | photomaton/take       | None          | Ask a new photo            |
 | photomaton/started    | None          | Phyton script started      |
 | photomaton/button     | None          | The button was pressed     |
+
+## Docker
+Build :
+```
+sudo docker build -t rpi-photom .
+```
+
+Run to access on port 8001 : 
+```
+sudo docker run -p "1883:1883" -p "8001:80" --mount type=bind,source=/dev/mem,target=/dev/mem --privileged rpi-photom
+```

@@ -40,6 +40,8 @@ part1 ()
 	zlibc \
 	zlib1g \
 	zlib1g-dev
+	git \
+	wget
 
 	EchoStatus $? "Update packages..."
 
