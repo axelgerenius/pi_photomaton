@@ -83,7 +83,8 @@ part1 ()
 
 	# ln mosquito in /bin
 	sudo ln -s /usr/local/sbin/mosquitto /bin/mosquitto
-
+	adduser mosquitto
+	/sbin/ldconfig
 }
 
 part2 ()
