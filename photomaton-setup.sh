@@ -39,9 +39,15 @@ part1 ()
 	daemon \
 	zlibc \
 	zlib1g \
+	gphoto2 \
 	zlib1g-dev
 
+
 	EchoStatus $? "Update packages..."
+
+	sudo chmod -x /usr/lib/gvfs/gvfs-gphoto2-volume-monitor
+	
+	EchoStatus $? "Disable gvfs-gphoto2-volume-monitor  - may need a restart..."
 
 	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
