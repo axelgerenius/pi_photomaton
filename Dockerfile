@@ -2,6 +2,7 @@ FROM balenalib/rpi-raspbian
 
 COPY wifi-bridge-ap_variant /photom/wifi-bridge-ap_variant
 COPY photomaton-setup.sh /photom/photomaton-setup.sh
+COPY helpers /photom/helpers
 
 WORKDIR /photom
 
