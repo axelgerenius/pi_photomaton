@@ -13,14 +13,19 @@ Wifi edit :
 wifi-bridge-ap_variant/wifi-bridge.config
 ```
 
-Installation :
+Full installation :
 ```bash
 ./photomaton-setup.sh
 ```
 
+Light installation :
+```bash
+./photomaton-setup.sh --light
+```
+
 Startup :
 ```bash
-./start.sh
+/etc/init.d/photomaton start
 ```
 
 Test mqtt bash :
