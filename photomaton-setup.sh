@@ -39,11 +39,18 @@ part1 ()
 	daemon \
 	zlibc \
 	zlib1g \
+	gphoto2 \
+	imagemagick \
 	zlib1g-dev
 	git \
 	wget
 
+
 	EchoStatus $? "Update packages..."
+
+	sudo chmod -x /usr/lib/gvfs/gvfs-gphoto2-volume-monitor
+	
+	EchoStatus $? "Disable gvfs-gphoto2-volume-monitor  - may need a restart..."
 
 	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
@@ -85,7 +92,8 @@ part1 ()
 
 	# ln mosquito in /bin
 	sudo ln -s /usr/local/sbin/mosquitto /bin/mosquitto
-
+	adduser mosquitto
+	/sbin/ldconfig
 }
 
 part2 ()
@@ -94,7 +102,7 @@ part2 ()
 	rm -R "$WEB_WWW"
 	mkdir -p "$WEB_WWW"
 	cp -r $my_dir/ui/dist/* "$WEB_WWW/"
-
+	mkdir -p "$WEB_WWW"/images
 	EchoStatus $? "Copy web ui in $WEB_WWW"
 
 	echo "#!/bin/bash" > "$INITD_SCRIPT_PATH"
@@ -246,7 +254,7 @@ main ()
 	done
 
 	# Do the part 1 if the option light wasn't used
-	if [ LIGHT -eq 0 ] ;then
+	if [ "$LIGHT" -eq 0 ] ;then
 		part1
 	fi
 

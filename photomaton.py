@@ -13,7 +13,7 @@ GREEN_LED_GPIO = 27
 
 BUTTON_GPIO = 4
 
-FILE_SAVE_PATH = "/share/www/images/"
+FILE_SAVE_PATH = "/var/photomaton-www/images/"
 
 client = mqtt.Client("pythonClient")
 
@@ -84,10 +84,14 @@ def initGPIO():
 
 def capture():
 	applyColor(Color.Cyan)
-	filename = FILE_SAVE_PATH + time.strftime('%d-%m-%y_%H-%M-%S') + ".jpg"
+	filename = time.strftime('%d-%m-%y_%H-%M-%S')
+
 	#call(["raspistill", "-o", filename ])
 	#call(["cp", filename, FILE_SAVE_PATH + "last.jpg"])
-	client.publish("photomaton/newPhoto",filename)
+	call(["convert", "-pointsize", "120", "label:"+filename, FILE_SAVE_PATH+filename+".png"])
+
+	print("capture")
+	client.publish("photomaton/newPhoto",filename + '.png')
 	applyColor(Color.Red)
 	time.sleep(3)
 	applyColor(Color.Green)
@@ -97,8 +101,11 @@ def on_message(client, userdata, message):
 	print("message topic=",message.topic)
 	print("message qos=",message.qos)
 	print("message retain flag=",message.retain)
+
 	if message.topic == "photomaton/take" :
+		print("good topic")
 		capture()
+
 
 def main():
 	initGPIO()
