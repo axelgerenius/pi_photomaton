@@ -1,11 +1,11 @@
-Nouveau nom du pi : pi_photomaton
-Nouveau Repository gitHub : pi_photomaton
+## Description
 
-Install Samba, avec dossier partagé : /share (Avec nouvelle conf pour le partage /etc/samba/conf...)
+Install a photobooth system on a raspberry PI. It needs a custom extension board HW with a button and an RGB LED.
+It comes bundled with a wifi AP routeur (eth -> wifi), an NGINX webserver, an MQTT broker with websockt support,
+Samba fileshare, python business logic, html/javascript web UI to be screened on the device.
 
-Install de la webcam sur le pi : /dev/video01 , puis install & utilisation de la commande de fswebcam pour capture image
 
-Branchement du circuit avec les composants (LED, bouton poussoir)
+## Installation
 
 Configuration:
 Wifi edit :
@@ -13,12 +13,12 @@ Wifi edit :
 wifi-bridge-ap_variant/wifi-bridge.config
 ```
 
-Full installation :
+Full installation (AP, NGINX, MQTT with WS, init scripts and web UI):
 ```bash
 ./photomaton-setup.sh
 ```
 
-Light installation :
+Light installation (Only init script and web UI):
 ```bash
 ./photomaton-setup.sh --light
 ```
