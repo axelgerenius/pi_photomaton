@@ -40,6 +40,7 @@ part1 ()
 	zlibc \
 	zlib1g \
 	gphoto2 \
+	imagemagick \
 	zlib1g-dev
 
 
@@ -99,7 +100,7 @@ part2 ()
 	rm -R "$WEB_WWW"
 	mkdir -p "$WEB_WWW"
 	cp -r $my_dir/ui/dist/* "$WEB_WWW/"
-
+	mkdir -p "$WEB_WWW"/images
 	EchoStatus $? "Copy web ui in $WEB_WWW"
 
 	echo "#!/bin/bash" > "$INITD_SCRIPT_PATH"
