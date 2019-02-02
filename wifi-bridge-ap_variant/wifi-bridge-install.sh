@@ -249,6 +249,7 @@ echo '    listen 80;' >> "$NGINX_CONFIG_PATH"
 echo '    location / {' >> "$NGINX_CONFIG_PATH"
 echo "      root $DATA_PATH_LOG;" >> "$NGINX_CONFIG_PATH"
 echo '      autoindex on;' >> "$NGINX_CONFIG_PATH"
+echo '      include  /etc/nginx/mime.types;' >> "$NGINX_CONFIG_PATH"
 echo '    }' >> "$NGINX_CONFIG_PATH"
 echo '  }' >> "$NGINX_CONFIG_PATH"
 

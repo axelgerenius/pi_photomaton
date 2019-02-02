@@ -9,12 +9,10 @@ RUN ./photomaton-setup.sh
 
 RUN adduser mosquitto
 
-RUN nginx -c /etc/wifi-bridge/nginx.conf
-
-RUN mosquitto -d -c /etc/mosquitto/mosquitto.conf
-
 COPY photomaton.py /photom/photomaton.py
 COPY ui/dist /var/photomaton-www
+COPY docker-run.sh /photom/run.sh
+RUN chmod +x run.sh
 
-ENTRYPOINT [ "/etc/init.d/photomaton start" ]
+ENTRYPOINT [ "/run.sh" ]
 
