@@ -2,8 +2,12 @@
 
 #apt-get update && apt-get install -y python
 
-MOSQUITTO_VER=mosquitto-1.4.14
+my_dir=`pwd`
+timestamp=`date`
 
+source "$my_dir/helpers"
+
+MOSQUITTO_VER=mosquitto-1.4.14
 WEB_WWW="/var/photomaton-www"
 
 cd wifi-bridge-ap_variant
@@ -30,9 +34,13 @@ zlibc \
 zlib1g \
 zlib1g-dev
 
+EchoStatus $? "Update packages..."
+
 sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 sudo pip install RPi.GPIO paho-mqtt
+
+EchoStatus $? "Install Python dependencies for GPIO and MQTT..."
 
 # Compile libwebsockets
 git clone https://github.com/warmcat/libwebsockets.git
@@ -40,6 +48,8 @@ cd libwebsockets
 mkdir build
 cd build
 cmake .. && sudo make install && sudo ldconfig
+
+EchoStatus $? "Compile libwebsockets"
 
 # Compile mosquitto
 mkdir ~/mosquitto
@@ -54,6 +64,8 @@ sed -i 's/WITH_WEBSOCKETS:=no/WITH_WEBSOCKETS:=yes/g' config.mk
 make && sudo make install
 sudo cp mosquitto.conf /etc/mosquitto
 
+EchoStatus $? "Compile mosquito..."
+
 echo
 
 echo "port 1883" >> /etc/mosquitto/mosquitto.conf
@@ -67,5 +79,5 @@ sudo ln -s /usr/local/sbin/mosquitto /bin/mosquitto
 # Copy the web UI to the server www
 cp -R ./ui/dist "$WEB_WWW"
 
-
+EchoStatus $? "Copy web ui in $WEB_WWW"
 
