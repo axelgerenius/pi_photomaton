@@ -244,7 +244,7 @@ main ()
 	done
 
 	# Do the part 1 if the option light wasn't used
-	if [ LIGHT -eq 0 ] ;then
+	if [ "$LIGHT" -eq 0 ] ;then
 		part1
 	fi
 
