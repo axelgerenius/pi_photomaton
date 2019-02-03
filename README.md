@@ -59,3 +59,7 @@ Run to access on port 8081 :
 ```
 sudo docker run -p 1883:1883 -p 8081:80 -p 9001:9001 --mount type=bind,source=/dev/mem,target=/dev/mem --privileged --detach rpi-photom
 ```
+Run to access on port 8081 and mount ui: 
+```
+sudo docker run --rm -p 1883:1883 -p 8081:80 -p 9001:9001 --mount type=bind,source=/dev/mem,target=/dev/mem --mount type=bind,source=`pwd`/ui/dist,target=/var/photomaton-www --privileged --detach rpi-photom
+```

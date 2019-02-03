@@ -10,6 +10,7 @@
   "dependencies": {
     "animate.css": "^3.7.0",
     "bulma": "^0.7.2",
+    "loaders.css": "^0.1.2",
     "mqtt": "^2.18.8",
     "vue": "^2.5.22",
     "vue-mqtt": "^2.0.3",
