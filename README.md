@@ -35,19 +35,19 @@ mosquitto_pub --host localhost --topic "photomaton/take" -m "go"
 mosquitto_sub --host localhost --topic "#"
 ```
 
-## Python script published topics
+### Python script published topics
 
 | TOPIC                 | MESSAGE       | DESCRIPTION                |
 | --------------------- | ------------- | -------------------------- |
 | photomaton/newPhoto   | Pic filename  | A photo was taken          |
+| photomaton/started    | None          | Phyton script started      |
+| photomaton/button     | None          | The button was pressed     |
 
-## Python script subscribed topics
+### Python script subscribed topics
 
 | TOPIC                 | MESSAGE       | DESCRIPTION                |
 | --------------------- | ------------- | -------------------------- |
 | photomaton/take       | None          | Ask a new photo            |
-| photomaton/started    | None          | Phyton script started      |
-| photomaton/button     | None          | The button was pressed     |
 
 ## Docker
 Build :
