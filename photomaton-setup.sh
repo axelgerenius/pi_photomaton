@@ -1,20 +1,47 @@
 #!/bin/bash
 
-#apt-get update && apt-get install -y python
+# ##############################################################################################################################################################################
+# Author:               Matthieu Holtz
+# Year:                 2019
+# Project:      		Photomaton
+# Description:  		Installs the photomaton system
+#
+# Licence:  	    	SPDX short identifier: MIT
+#
+#						Copyright © 2019, Matthieu Holtz <matthieu.holtz@gmail.com>
+#
+#						Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
+#                       (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, 
+#                       sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#						The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#						THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+#                       OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+#                       DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+#                       OTHER DEALINGS IN THE SOFTWARE.
+# ##############################################################################################################################################################################
+
+
+######### Custtomization area #########
+
+# Name of the service created in /etc/init.d to start/stop the photomaton
+SERVICE_NAME="photomaton"
+
+# Path of the service
+INITD_SCRIPT_PATH="/etc/init.d/$SERVICE_NAME"
+
+# Version of mosquitto to fetch
+MOSQUITTO_VER=mosquitto-1.4.14
+
+# WWW directory where the ui has to be installed
+WEB_WWW="/var/photomaton-www"
+
+#######################################
 
 my_dir=`pwd`
 timestamp=`date`
 
 source "$my_dir/helpers"
 
-######### Custtomization area #########
-
-SERVICE_NAME="photomaton"
-INITD_SCRIPT_PATH="/etc/init.d/$SERVICE_NAME"
-MOSQUITTO_VER=mosquitto-1.4.14
-WEB_WWW="/var/photomaton-www"
-
-#######################################
 part1 ()
 {
 	cd wifi-bridge-ap_variant
@@ -47,7 +74,7 @@ part1 ()
 	EchoStatus $? "Update packages..."
 
 	sudo chmod -x /usr/lib/gvfs/gvfs-gphoto2-volume-monitor
-	
+
 	EchoStatus $? "Disable gvfs-gphoto2-volume-monitor  - may need a restart..."
 
 	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
@@ -57,31 +84,31 @@ part1 ()
 	EchoStatus $? "Install Python dependencies for GPIO and MQTT..."
 
 	# Compile libwebsockets
+	cd /tmp
 	git clone https://github.com/warmcat/libwebsockets.git
+	EchoStatus $? "Fetch libwebsockets"
 	cd libwebsockets
 	mkdir build
 	cd build
 	cmake .. && sudo make install && sudo ldconfig
-
 	EchoStatus $? "Compile libwebsockets"
 
+	cd "$my_dir"
+
 	# Compile mosquitto
-	mkdir ~/mosquitto
-	cd ~/mosquitto/
+	mkdir /tmp/mosquitto
+	cd /tmp/mosquitto/
 
 	wget https://mosquitto.org/files/source/$MOSQUITTO_VER.tar.gz
 	tar zxvf $MOSQUITTO_VER.tar.gz
 	cd $MOSQUITTO_VER
-
+ 	EchoStatus $? "Fetch mosquitto $MOSQUITTO_VER"
 	sed -i 's/WITH_WEBSOCKETS:=no/WITH_WEBSOCKETS:=yes/g' config.mk
-
+	EchoStatus $? "Set mosquitto WEBSOCKETS support"
 	make && sudo make install
 	EchoStatus $? "Compile mosquito..."
-
 	sudo cp mosquitto.conf /etc/mosquitto
-
 	EchoStatus $? "Configure mosquito..."
-
 
 	echo "port 1883" >> /etc/mosquitto/mosquitto.conf
 	echo "listener 9001" >> /etc/mosquitto/mosquitto.conf
@@ -90,8 +117,11 @@ part1 ()
 
 	# ln mosquito in /bin
 	sudo ln -s /usr/local/sbin/mosquitto /bin/mosquitto
+
 	adduser mosquitto
-	/sbin/ldconfig
+	EchoStatus $? "Create user mosquitto"
+
+	sudo ldconfig
 }
 
 part2 ()
