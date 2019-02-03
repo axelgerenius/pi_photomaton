@@ -18,13 +18,13 @@
             <div></div>
             <div></div>
           </div>
-          <transition leave-active-class="animated fadeOutRightBig">
+          <transition leave-active-class="animated fadeOutRightBig" v-on:after-leave="init()">
             <photo-viewer v-if="state == 'display'" v-bind:src="filename" />
           </transition>
           <p v-if="state == 'error'">{{ error }}</p>
           <button
             v-if="state == 'display' || state == 'error'"
-            v-on:click="init()"
+            v-on:click="closePhoto()"
             class="button is-medium"
           >
             New photo
@@ -120,6 +120,9 @@ export default {
         this.error = "Timeout, no photo received";
         this.state = "error";
       }
+    },
+    closePhoto() {
+      this.state = 'transition';
     }
   }
 };
