@@ -213,6 +213,17 @@ part2 ()
 	echo "    exit 0" >> "$INITD_SCRIPT_PATH"
 	echo "    ;;" >> "$INITD_SCRIPT_PATH"
 
+        echo '####################' >> "$INITD_SCRIPT_PATH"
+        echo '# Restart handling #' >> "$INITD_SCRIPT_PATH"
+        echo '####################' >> "$INITD_SCRIPT_PATH"
+
+        echo "  restart)" >> "$INITD_SCRIPT_PATH"
+        echo '    echo "Restarting..."' >> "$INITD_SCRIPT_PATH"
+        echo "    process_stop" >> "$INITD_SCRIPT_PATH"
+        echo "    process_start" >> "$INITD_SCRIPT_PATH"
+        echo "    exit 0" >> "$INITD_SCRIPT_PATH"
+        echo "    ;;" >> "$INITD_SCRIPT_PATH"
+
 	echo '##################' >> "$INITD_SCRIPT_PATH"
 	echo '# Other handling #' >> "$INITD_SCRIPT_PATH"
 	echo '##################' >> "$INITD_SCRIPT_PATH"
