@@ -88,7 +88,7 @@ def capture():
 
 	#call(["raspistill", "-o", filename ])
 	#call(["cp", filename, FILE_SAVE_PATH + "last.jpg"])
-	call(["convert", "-pointsize", "120", "label:"+filename, FILE_SAVE_PATH+filename+".png"])
+	call(["convert", "-pointsize", "120", "-font", "DejaVu-Sans", "label:"+filename, FILE_SAVE_PATH+filename+".png"])
 
 	print("capture")
 	client.publish("photomaton/newPhoto",filename + '.png')

@@ -61,6 +61,17 @@ export default {
       filename: ""
     };
   },
+  computed: {
+    leaveClass() {
+      switch (this.state) {
+        case "iddle":
+          return "animated fadeOutRightBig";
+
+        default:
+          return "";
+      }
+    }
+  },
   mounted() {
     this.$mqtt.on("connect", () => {
       this.connected = true;
@@ -81,7 +92,7 @@ export default {
         case config.mqttTopicPhotoTaken:
           this.waitPhoto = false;
           this.state = "display";
-          this.filename = message.toString();
+          this.filename = "images/" + message.toString();
           break;
 
         default:

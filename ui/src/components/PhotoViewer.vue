@@ -2,7 +2,11 @@
   <div>
     <transition enter-active-class="animated jackInTheBox">
       <figure v-show="show">
-        <img v-bind:src="file" v-on:load="showPhoto()" v-on:error="showError()" />
+        <img
+          v-bind:src="file"
+          v-on:load="showPhoto()"
+          v-on:error="showError()"
+        />
       </figure>
     </transition>
     <p v-if="error">Error during photo load</p>

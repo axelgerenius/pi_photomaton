@@ -5,5 +5,5 @@ export default {
   mqttTopicPhotoTaken: "photomaton/newPhoto",
   mqttTopicButton: "photomaton/button",
 
-  countdownTime: 3
+  countdownTime: 5
 };
