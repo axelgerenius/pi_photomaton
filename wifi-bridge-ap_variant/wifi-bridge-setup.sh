@@ -22,6 +22,9 @@ source /tmp/wifi-bridge.config
 
 KillProcess
 
+sudo nmcli radio wifi off
+sudo rfkill unblock wlan
+
 HOSTAPD_CONF="/tmp/wpa_supplicant.conf"
 ICS_DHCP_CONF="/tmp/dhcpd.conf"
 
