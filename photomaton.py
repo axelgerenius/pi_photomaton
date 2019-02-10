@@ -88,10 +88,14 @@ def capture():
 
 	#call(["raspistill", "-o", filename ])
 	#call(["cp", filename, FILE_SAVE_PATH + "last.jpg"])
-	call(["convert", "-pointsize", "120", "-font", "DejaVu-Sans", "label:"+filename, FILE_SAVE_PATH+filename+".png"])
+
+
+	ret=call(["gphoto2", "--capture-image-and-download", "--filename", "/var/photomaton-www/images/"+filename+".jpg"])
+	if ret != 0:
+		call(["convert", "-pointsize", "120", "-font", "DejaVu-Sans", "label:"+filename, FILE_SAVE_PATH+filename+".jpg"])
 
 	print("capture")
-	client.publish("photomaton/newPhoto",filename + '.png')
+	client.publish("photomaton/newPhoto",filename + '.jpg')
 	applyColor(Color.Red)
 	time.sleep(3)
 	applyColor(Color.Green)
