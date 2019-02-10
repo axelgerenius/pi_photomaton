@@ -3,6 +3,7 @@
     <section id="main" class="hero is-danger is-fullheight has-text-centered">
       <div class="hero-body">
         <div class="container">
+          <p v-if="!connected">Not connected</p>
           <button
             v-if="state == 'iddle'"
             v-on:click="takePhoto()"
@@ -18,7 +19,10 @@
             <div></div>
             <div></div>
           </div>
-          <transition leave-active-class="animated fadeOutRightBig" v-on:after-leave="init()">
+          <transition
+            leave-active-class="animated fadeOutRightBig"
+            v-on:after-leave="init()"
+          >
             <photo-viewer v-if="state == 'display'" v-bind:src="filename" />
           </transition>
           <p v-if="state == 'error'">{{ error }}</p>
@@ -122,7 +126,7 @@ export default {
       }
     },
     closePhoto() {
-      this.state = 'transition';
+      this.state = "transition";
     }
   }
 };
