@@ -8,18 +8,18 @@
 </template>
 
 <script>
-import config from "../config.js";
-
 export default {
   name: "countdown",
+  props: ["seconds"],
   data() {
     return {
-      countdown: config.countdownTime,
+      countdown: 3,
       showCountdown: true,
       showSmile: false
     };
   },
   mounted() {
+    this.countdown = this.seconds;
     this.showCountdown = true;
     this.update();
   },
@@ -30,7 +30,7 @@ export default {
         if (this.countdown == 0) {
           this.showCountdown = false;
           this.showSmile = true;
-          this.$mqtt.publish(config.mqttTopicTakePhoto, "go");
+          this.$emit('end');
         } else {
           this.update();
         }

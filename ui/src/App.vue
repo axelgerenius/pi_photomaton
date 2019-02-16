@@ -6,12 +6,16 @@
           <p v-if="!connected">Not connected</p>
           <button
             v-if="state == 'iddle'"
-            v-on:click="takePhoto()"
+            v-on:click="buttonPressed()"
             class="button is-primary is-large"
           >
             Take photo
           </button>
-          <countdown v-if="state == 'countdown'" />
+          <countdown 
+            v-if="state == 'countdown'" 
+            v-bind:seconds="countdownTime"
+            v-on:end="countdownEnded()"
+          />
           <div v-if="state == 'waiting'" class="line-scale">
             <div></div>
             <div></div>
@@ -62,7 +66,8 @@ export default {
       state: "iddle",
       waitPhoto: false,
       connected: false,
-      filename: ""
+      filename: "",
+      triggerTime: null
     };
   },
   computed: {
@@ -74,7 +79,10 @@ export default {
         default:
           return "";
       }
-    }
+    },
+    countdownTime() {
+      return config.countdownTime;
+    },
   },
   mounted() {
     this.$mqtt.on("connect", () => {
@@ -90,13 +98,13 @@ export default {
         case config.mqttTopicTakePhoto:
           this.waitPhoto = true;
           setTimeout(() => this.waitReponse(), 2000);
-          setTimeout(() => this.noResponse(), 10000);
+          setTimeout(() => this.noResponse(), 12000);
           break;
 
         case config.mqttTopicPhotoTaken:
           this.waitPhoto = false;
           this.state = "display";
-          this.filename = "images/" + message.toString();
+          this.filename = `http://${config.host}/images/${message.toString()}`;
           break;
 
         default:
@@ -113,8 +121,15 @@ export default {
       this.filename = "";
       this.connected = this.$mqtt.connected;
     },
-    takePhoto() {
-      this.$mqtt.publish(config.mqttTopicButton, "pressed");
+    buttonPressed() {
+      this.triggerTime = Date.now().toString();
+      this.$mqtt.publish(config.mqttTopicButton, this.triggerTime);
+    },
+    countdownEnded() {
+      if (this.triggerTime != null) {
+        this.$mqtt.publish(config.mqttTopicTakePhoto, this.triggerTime);
+        this.triggerTime = null;
+      }
     },
     waitReponse() {
       this.state = "waiting";
