@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
 import sys
+import os
 import time
 import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
+import json
 from enum import Enum
 from subprocess import call
+from stat import *
 
 RED_LED_GPIO = 17
 BLUE_LED_GPIO = 22
@@ -96,6 +99,22 @@ def capture():
 	time.sleep(3)
 	applyColor(Color.Green)
 
+
+def photo_list():
+	print ("in photo_list")
+	files = os.listdir(FILE_SAVE_PATH)
+	computed = []
+	for name in files:
+		stat = os.stat(FILE_SAVE_PATH + name)
+		f = {}
+		f["image"] = name
+		f["timestamp"] = stat.st_ctime
+		f["size"] = stat.st_size
+		computed.append(f)
+
+	jsonfied = json.dumps(computed, ensure_ascii=False)
+	client.publish("photomaton/list_result",jsonfied)
+
 def on_message(client, userdata, message):
 	print("message received " ,str(message.payload.decode("utf-8")))
 	print("message topic=",message.topic)
@@ -103,9 +122,12 @@ def on_message(client, userdata, message):
 	print("message retain flag=",message.retain)
 
 	if message.topic == "photomaton/take" :
-		print("good topic")
+		print("Topic take")
 		capture()
 
+	elif message.topic == "photomaton/list" :
+		print("Topic list")
+		photo_list()
 
 def main():
 	initGPIO()
@@ -115,6 +137,7 @@ def main():
 	client.on_message=on_message #attach function to callback
 	client.loop_start() #start the loop
 	client.subscribe("photomaton/take")
+	client.subscribe("photomaton/list")
 	client.publish("photomaton/started", "started")
 	while True:
 		if buttonPressed() == True:
