@@ -49,6 +49,11 @@ mosquitto_sub --host localhost --topic "#"
 | --------------------- | ------------- | -------------------------- |
 | photomaton/take       | None          | Ask a new photo            |
 
+## Open ui
+```
+DISPLAY=:0 chromium-browser --app=http://localhost:8081 --start-fullscreen
+```
+
 ## Docker
 Build :
 ```
@@ -57,9 +62,10 @@ sudo docker build -t rpi-photom .
 
 Run to access on port 8081 : 
 ```
-sudo docker run -p 1883:1883 -p 8081:80 -p 9001:9001 --mount type=bind,source=/dev/mem,target=/dev/mem --privileged --detach rpi-photom
+sudo docker run -p 1883:1883 -p 8081:80 -p 9001:9001 --privileged --detach rpi-photom
 ```
+
 Run to access on port 8081 and mount ui: 
 ```
-sudo docker run --rm -p 1883:1883 -p 8081:80 -p 9001:9001 --mount type=bind,source=/dev/mem,target=/dev/mem --mount type=bind,source=`pwd`/ui/dist,target=/var/photomaton-www --privileged --detach rpi-photom
+sudo docker run --rm -p 1883:1883 -p 8081:80 -p 9001:9001 --mount type=bind,source=`pwd`/ui/dist,target=/var/photomaton-www --privileged --detach rpi-photom
 ```
