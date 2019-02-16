@@ -1,4 +1,10 @@
 export default {
+  host:
+    process.env.VUE_APP_WEB_HOST == "local"
+      ? location.host
+      : process.env.VUE_APP_WEB_HOST,
+
+  // MQTT params
   mqttUrl:
     process.env.VUE_APP_WS_HOSTNAME == "local"
       ? `ws://${document.domain}:9001`
@@ -7,9 +13,8 @@ export default {
   mqttTopicPhotoTaken: "photomaton/newPhoto",
   mqttTopicButton: "photomaton/button",
 
+  // COUNTDOWNS
   countdownTime: 5,
-  host:
-    process.env.VUE_APP_WEB_HOST == "local"
-      ? location.host
-      : process.env.VUE_APP_WEB_HOST
+  countdownText: "Say cheese !",
+  displayTime: 12
 };

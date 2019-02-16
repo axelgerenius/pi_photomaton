@@ -4,39 +4,47 @@
       <div class="hero-body">
         <div class="container">
           <p v-if="!connected">Not connected</p>
-          <button
-            v-if="state == 'iddle'"
-            v-on:click="buttonPressed()"
-            class="button is-primary is-large"
-          >
-            Take photo
-          </button>
-          <countdown 
-            v-if="state == 'countdown'" 
-            v-bind:seconds="countdownTime"
-            v-on:end="countdownEnded()"
-          />
-          <div v-if="state == 'waiting'" class="line-scale">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <transition
-            leave-active-class="animated fadeOutRightBig"
-            v-on:after-leave="init()"
-          >
-            <photo-viewer v-if="state == 'display'" v-bind:src="filename" />
+          <transition v-bind:leave-active-class="animation" mode="out-in">
+            <button
+              v-if="state == 'iddle'"
+              v-on:click="buttonPressed()"
+              class="button is-primary is-large"
+            >
+              Take photo
+            </button>
+            <countdown
+              v-if="state == 'countdown'"
+              v-bind:seconds="countdownTime"
+              v-bind:text="countdownText"
+              animated="true"
+              v-on:end="countdownEnded()"
+            />
+            <div v-if="state == 'waiting'" class="line-scale">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <photo-viewer
+              v-if="state == 'load' || state == 'display'"
+              v-bind:src="filename"
+              v-on:load="photoLoaded()"
+            />
+            <p v-if="state == 'error'">{{ error }}</p>
           </transition>
-          <p v-if="state == 'error'">{{ error }}</p>
-          <button
-            v-if="state == 'display' || state == 'error'"
-            v-on:click="closePhoto()"
-            class="button is-medium"
-          >
-            New photo
-          </button>
+          <transition enter-active-class="animated fadeIn">
+            <button
+              v-if="state == 'display' || state == 'error'"
+              v-on:click="closePhoto()"
+              class="button is-medium"
+            >
+              New photo
+            </button>
+          </transition>
+        </div>
+        <div id="BottomRight" v-if="state == 'display'">
+          <countdown v-bind:seconds="displayTime" v-on:end="closePhoto()" />
         </div>
       </div>
     </section>
@@ -47,6 +55,14 @@
 @import "../node_modules/bulma/css/bulma.css";
 @import "../node_modules/animate.css/animate.css";
 @import "../node_modules/loaders.css/loaders.css";
+</style>
+
+<style scoped>
+#BottomRight {
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+}
 </style>
 
 <script>
@@ -67,7 +83,11 @@ export default {
       waitPhoto: false,
       connected: false,
       filename: "",
-      triggerTime: null
+      triggerTime: null,
+      animation: "",
+      countdownTime: config.countdownTime,
+      countdownText: config.countdownText,
+      displayTime: config.displayTime
     };
   },
   computed: {
@@ -79,10 +99,7 @@ export default {
         default:
           return "";
       }
-    },
-    countdownTime() {
-      return config.countdownTime;
-    },
+    }
   },
   mounted() {
     this.$mqtt.on("connect", () => {
@@ -92,7 +109,7 @@ export default {
       console.log(topic, message.toString(), packet);
       switch (topic) {
         case config.mqttTopicButton:
-          this.state = "countdown";
+          this.setState("countdown");
           break;
 
         case config.mqttTopicTakePhoto:
@@ -103,7 +120,7 @@ export default {
 
         case config.mqttTopicPhotoTaken:
           this.waitPhoto = false;
-          this.state = "display";
+          this.setState("load");
           this.filename = `http://${config.host}/images/${message.toString()}`;
           break;
 
@@ -117,7 +134,7 @@ export default {
   },
   methods: {
     init() {
-      this.state = "iddle";
+      this.setState("iddle");
       this.filename = "";
       this.connected = this.$mqtt.connected;
     },
@@ -131,8 +148,11 @@ export default {
         this.triggerTime = null;
       }
     },
+    photoLoaded() {
+      this.setState("display");
+    },
     waitReponse() {
-      this.state = "waiting";
+      this.setState("waiting");
     },
     noResponse() {
       if (this.waitPhoto) {
@@ -141,7 +161,15 @@ export default {
       }
     },
     closePhoto() {
-      this.state = "transition";
+      this.setState("iddle", "animated fadeOutRightBig");
+    },
+    setState(state, animation) {
+      if (animation) {
+        this.animation = animation;
+      } else {
+        this.animation = "";
+      }
+      this.state = state;
     }
   }
 };

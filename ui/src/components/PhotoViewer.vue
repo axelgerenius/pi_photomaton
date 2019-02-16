@@ -1,6 +1,6 @@
 <template>
   <div>
-    <transition enter-active-class="animated jackInTheBox">
+    <transition enter-active-class="animated fadeIn">
       <figure v-show="show">
         <img
           v-bind:src="file"
@@ -56,6 +56,7 @@ export default {
     },
     showPhoto() {
       this.show = true;
+      this.$emit("load");
     },
     showError() {
       this.error = true;
