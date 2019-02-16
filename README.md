@@ -37,17 +37,20 @@ mosquitto_sub --host localhost --topic "#"
 
 ### Python script published topics
 
-| TOPIC                 | MESSAGE       | DESCRIPTION                |
-| --------------------- | ------------- | -------------------------- |
-| photomaton/newPhoto   | Pic filename  | A photo was taken          |
-| photomaton/started    | None          | Phyton script started      |
-| photomaton/button     | None          | The button was pressed     |
+| TOPIC                  | MESSAGE       | DESCRIPTION                   |
+| ---------------------- | ------------- | ----------------------------- |
+| photomaton/newPhoto    | Pic filename  | A photo was taken             |
+| photomaton/started     | None          | Phyton script started         |
+| photomaton/button      | None          | The button was pressed        |
+| photomaton/list_result | None          | Result of photomaton/list     |
 
 ### Python script subscribed topics
 
 | TOPIC                 | MESSAGE       | DESCRIPTION                |
 | --------------------- | ------------- | -------------------------- |
 | photomaton/take       | None          | Ask a new photo            |
+| photomaton/list       | None          | Ask list of all photos     |
+
 
 ## Docker
 Build :
