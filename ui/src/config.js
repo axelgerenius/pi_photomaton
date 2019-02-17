@@ -16,5 +16,5 @@ export default {
   // COUNTDOWNS
   countdownTime: 5,
   countdownText: "Say cheese !",
-  displayTime: 12
+  displayTime: 30
 };

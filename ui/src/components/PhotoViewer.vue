@@ -15,14 +15,12 @@
 
 <style scoped>
 figure {
-  box-shadow: 0px 0px 10px gray;
   padding: 1em 1em 2.6em 1em;
   background: white;
   margin: 1em;
   border: 1px #ccc solid;
 }
 img {
-  border: 1px #ccc solid;
 }
 </style>
 
@@ -36,6 +34,12 @@ export default {
       show: false,
       error: false
     };
+  },
+  computed: {
+    style() {
+      return `max-height: ${document.body.clientHeight}px; 
+              max-width: ${document.body.clientWidth}px;`;
+    }
   },
   mounted() {
     this.show = false;

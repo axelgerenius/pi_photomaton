@@ -30,6 +30,7 @@
               v-if="state == 'load' || state == 'display'"
               v-bind:src="filename"
               v-on:load="photoLoaded()"
+              class="fullScreen"
             />
             <p v-if="state == 'error'">{{ error }}</p>
           </transition>
@@ -37,31 +38,65 @@
             <button
               v-if="state == 'display' || state == 'error'"
               v-on:click="closePhoto()"
-              class="button is-medium"
+              class="bottomLeft button"
             >
               New photo
             </button>
           </transition>
         </div>
-        <div id="BottomRight" v-if="state == 'display'">
-          <countdown v-bind:seconds="displayTime" v-on:end="closePhoto()" />
+        <div class="bottomRight" v-if="state == 'display'">
+          <countdown
+            v-bind:seconds="displayTime"
+            v-on:end="closePhoto()"
+            circle="true"
+          />
         </div>
       </div>
     </section>
   </div>
 </template>
 
+<style lang="sass">
+$danger: coral;
+$primary: #00b2b2;
+$size-1: 6rem;
+$size-2: 5rem;
+$size-3: 4rem;
+$size-4: 3rem;
+$size-5: 2rem;
+$size-6: 1.5rem;
+$size-7: 1rem;
+@import "node_modules/bulma/bulma.sass"
+</style>
 <style lang="css">
-@import "../node_modules/bulma/css/bulma.css";
 @import "../node_modules/animate.css/animate.css";
 @import "../node_modules/loaders.css/loaders.css";
 </style>
 
-<style scoped>
-#BottomRight {
-  position: absolute;
-  bottom: 1em;
-  right: 1em;
+<style>
+body {
+  cursor: none;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+.button {
+  cursor: none;
+}
+.bottomRight {
+  position: fixed;
+  bottom: 0.5em;
+  right: 0.5em;
+}
+.fullScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.bottomLeft {
+  position: fixed;
+  bottom: 0.5em;
+  left: 0.5em;
 }
 </style>
 
