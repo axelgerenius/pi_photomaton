@@ -8,6 +8,7 @@ import paho.mqtt.client as mqtt
 import json
 from enum import Enum
 from subprocess import call
+from subprocess import Popen
 from stat import *
 
 RED_LED_GPIO = 17
@@ -17,6 +18,7 @@ GREEN_LED_GPIO = 27
 BUTTON_GPIO = 4
 
 FILE_SAVE_PATH = "/var/photomaton-www/images/"
+FILE_SAVE_PATH_THUMBNAILS = FILE_SAVE_PATH + "thumbnails/"
 
 client = mqtt.Client("pythonClient")
 
@@ -92,12 +94,18 @@ def capture():
 	#call(["raspistill", "-o", filename ])
 	#call(["cp", filename, FILE_SAVE_PATH + "last.jpg"])
 
+#	ret=call(["raspistill", "-o", FILE_SAVE_PATH+filename+".jpg" ])
 
+	# Capture
 	ret=call(["gphoto2", "--capture-image-and-download", "--filename", "/var/photomaton-www/images/"+filename+".jpg"])
+
+	# On error generate dummy file
 	if ret != 0:
 		call(["convert", "-pointsize", "120", "-font", "DejaVu-Sans", "label:"+filename, FILE_SAVE_PATH+filename+".jpg"])
 
-	print("capture")
+	# Thumbnail it
+	p = Popen(["convert", "-thumbnail", "200x200", FILE_SAVE_PATH+filename+".jpg", FILE_SAVE_PATH_THUMBNAILS+filename+".jpg"])
+
 	client.publish("photomaton/newPhoto",filename + '.jpg')
 	applyColor(Color.Red)
 	time.sleep(3)
@@ -105,7 +113,6 @@ def capture():
 
 
 def photo_list():
-	print ("in photo_list")
 	files = os.listdir(FILE_SAVE_PATH)
 	computed = []
 	for name in files:
