@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div v-if="circle" id="CircleContainer">
-      <percent-circle v-bind:percent="percent" radius="10" />
-    </div>
-    <transition v-else v-bind:enter-active-class="animation" mode="out-in">
+    <transition v-bind:enter-active-class="animation" mode="out-in">
       <h1 v-if="showCountdown" class="title" v-bind:key="countdown">
         {{ countdown }}
       </h1>
@@ -12,21 +9,11 @@
   </div>
 </template>
 
-<style scoped>
-#CircleContainer {
-  margin-top: -20px;
-}
-</style>
 
 <script>
-import PercentCircle from "./PercentCircle.vue";
-
 export default {
   name: "countdown",
-  props: ["seconds", "text", "animated", "circle"],
-  components: {
-    PercentCircle
-  },
+  props: ["seconds", "text", "animated"],
   data() {
     return {
       countdown: 3,
@@ -44,9 +31,6 @@ export default {
     },
     finalText() {
       return this.text;
-    },
-    percent() {
-      return (1 - (this.countdown - 1) / this.seconds) * 100;
     }
   },
   mounted() {
