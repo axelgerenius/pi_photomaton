@@ -116,12 +116,13 @@ def photo_list():
 	files = os.listdir(FILE_SAVE_PATH)
 	computed = []
 	for name in files:
-		stat = os.stat(FILE_SAVE_PATH + name)
-		f = {}
-		f["image"] = name
-		f["timestamp"] = stat.st_ctime
-		f["size"] = stat.st_size
-		computed.append(f)
+		if name.lower().endswith(('.png', '.jpg', '.jpeg')) :
+			stat = os.stat(FILE_SAVE_PATH + name)
+			f = {}
+			f["image"] = name
+			f["timestamp"] = stat.st_ctime
+			f["size"] = stat.st_size
+			computed.append(f)
 
 	jsonfied = json.dumps(computed, ensure_ascii=False)
 	client.publish("photomaton/list_result",jsonfied)
