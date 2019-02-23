@@ -82,7 +82,7 @@ part1 ()
 	sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 	sudo pip install RPi.GPIO paho-mqtt
-
+	sudo pip install dropbox
 	EchoStatus $? "Install Python dependencies for GPIO and MQTT..."
 
 	# Compile libwebsockets
@@ -134,6 +134,7 @@ part2 ()
 	cp -r $my_dir/ui/dist/* "$WEB_WWW/"
 	mkdir -p "$WEB_WWW"/images
 	mkdir -p "$WEB_WWW"/images/thumbnails
+	mkdir -p "$WEB_WWW"/pending
 	EchoStatus $? "Copy web ui in $WEB_WWW"
 
 	echo "#!/bin/bash" > "$INITD_SCRIPT_PATH"
