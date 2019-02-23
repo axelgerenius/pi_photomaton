@@ -60,7 +60,7 @@ export default {
   name: "app",
   data() {
     return {
-      connected: false,
+      connected: false
     };
   },
   mounted() {
