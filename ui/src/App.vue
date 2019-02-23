@@ -1,5 +1,14 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <div
+      v-if="!connected"
+      id="health"
+      class="notification is-warning has-text-centered"
+    >
+      Not connected to MQTT
+    </div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <style lang="sass">
@@ -30,6 +39,7 @@ html {
 }
 body {
   cursor: none;
+  color: white;
 }
 ::-webkit-scrollbar {
   display: none;
@@ -37,10 +47,29 @@ body {
 .button {
   cursor: none;
 }
+#health {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
 </style>
 
 <script>
 export default {
-  name: "app"
+  name: "app",
+  data() {
+    return {
+      connected: false,
+    };
+  },
+  mounted() {
+    this.$mqtt.on("connect", () => {
+      this.connected = true;
+    });
+  },
+  beforeUpdate() {
+    this.connected = this.$mqtt.connected;
+  }
 };
 </script>

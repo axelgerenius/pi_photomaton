@@ -3,7 +3,6 @@
     <div class="hero-body">
       <countdown-bar v-if="state == 'display'" v-bind:seconds="displayTime" />
       <div class="container">
-        <p v-if="!connected">Not connected</p>
         <transition v-bind:leave-active-class="animation" mode="out-in">
           <button
             v-if="state == 'iddle'"
@@ -91,7 +90,6 @@ export default {
     return {
       state: "iddle",
       waitPhoto: false,
-      connected: false,
       filename: "",
       triggerTime: null,
       animation: "",
@@ -112,9 +110,6 @@ export default {
     }
   },
   mounted() {
-    this.$mqtt.on("connect", () => {
-      this.connected = true;
-    });
     this.$mqtt.on("message", (topic, message, packet) => {
       console.log(topic, message.toString(), packet);
       switch (topic) {
