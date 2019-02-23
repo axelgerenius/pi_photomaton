@@ -18,8 +18,16 @@ $size-7: 1rem;
 @import "../node_modules/animate.css/animate.css";
 @import "../node_modules/loaders.css/loaders.css";
 </style>
+<style lang="scss">
+$fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/solid";
+</style>
 
 <style>
+html {
+  background-color: coral;
+}
 body {
   cursor: none;
 }
@@ -33,6 +41,6 @@ body {
 
 <script>
 export default {
-  name: "app",
+  name: "app"
 };
 </script>

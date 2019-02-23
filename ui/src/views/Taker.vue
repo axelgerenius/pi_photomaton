@@ -1,6 +1,7 @@
 <template>
   <section id="main" class="hero is-danger is-fullheight has-text-centered">
     <div class="hero-body">
+      <countdown-bar v-if="state == 'display'" v-bind:seconds="displayTime" />
       <div class="container">
         <p v-if="!connected">Not connected</p>
         <transition v-bind:leave-active-class="animation" mode="out-in">
@@ -34,20 +35,22 @@
           <p v-if="state == 'error'">{{ error }}</p>
         </transition>
         <transition enter-active-class="animated fadeIn">
-          <button
+          <span
             v-if="state == 'display' || state == 'error'"
             v-on:click="closePhoto()"
-            class="bottomLeft button"
+            class="bottomLeft icon is-large"
           >
-            New photo
-          </button>
+            <i class="fas fa-arrow-left fa-3x"></i>
+          </span>
         </transition>
       </div>
-      <div class="bottomRight" v-if="state == 'display'">
-        <countdown-bar
-          v-bind:seconds="displayTime"
-        />
-      </div>
+      <span
+        v-if="state == 'iddle'"
+        v-on:click="$router.push('/gallery')"
+        class="bottomRight icon is-large"
+      >
+        <i class="fas fa-th fa-3x"></i>
+      </span>
     </div>
   </section>
 </template>

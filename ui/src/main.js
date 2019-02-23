@@ -6,6 +6,7 @@ import config from "./config";
 import App from "./App.vue";
 
 import Taker from "./views/Taker.vue";
+import Gallery from "./views/Gallery.vue";
 
 Vue.use(VueRouter);
 
@@ -16,7 +17,8 @@ Vue.use(VueMqtt, config.mqttUrl, {
 Vue.config.productionTip = false;
 
 const routes = [
-  { path: "/", component: Taker }
+  { path: "/", component: Taker },
+  { path: "/gallery", component: Gallery }
 ];
 
 const router = new VueRouter({

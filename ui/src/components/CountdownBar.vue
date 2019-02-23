@@ -1,5 +1,9 @@
 <template>
-  <progress class="progress" v-bind:value="countdown" v-bind:max="seconds"></progress>
+  <progress
+    class="progress"
+    v-bind:value="countdown"
+    v-bind:max="seconds"
+  ></progress>
 </template>
 
 <style scoped>

@@ -12,9 +12,11 @@ export default {
   mqttTopicTakePhoto: "photomaton/take",
   mqttTopicPhotoTaken: "photomaton/newPhoto",
   mqttTopicButton: "photomaton/button",
+  mqttTopicListAsk: "photomaton/list",
+  mqttTopicListResult: "photomaton/list_result",
 
   // COUNTDOWNS
   countdownTime: 5,
   countdownText: "Say cheese !",
-  displayTime: 30
+  displayTime: 120
 };
