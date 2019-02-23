@@ -1,6 +1,6 @@
 ## Description
 
-Install a photobooth system on a raspberry PI. It needs a custom extension board HW with a button and an RGB LED.
+Install a photobooth system on a raspberry PI.
 It comes bundled with a wifi AP routeur (eth -> wifi), an NGINX webserver, an MQTT broker with websockt support,
 Samba fileshare, python business logic, html/javascript web UI to be screened on the device.
 
