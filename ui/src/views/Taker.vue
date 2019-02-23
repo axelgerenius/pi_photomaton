@@ -162,7 +162,9 @@ export default {
       this.setState("display");
     },
     waitReponse() {
-      this.setState("waiting");
+      if (this.waitPhoto) {
+        this.setState("waiting");
+      }
     },
     noResponse() {
       if (this.waitPhoto) {
