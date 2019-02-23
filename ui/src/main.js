@@ -18,11 +18,12 @@ Vue.config.productionTip = false;
 
 const routes = [
   { path: "/", component: Taker },
-  { path: "/gallery", component: Gallery }
+  { path: "/gallery", component: Gallery },
+  { path: "/gallery/:page", component: Gallery, props: true }
 ];
 
 const router = new VueRouter({
-  routes // short for `routes: routes`
+  routes
 });
 
 new Vue({
