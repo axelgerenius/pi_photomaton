@@ -158,11 +158,11 @@ part2 ()
 
 	echo "function process_stop {" >> "$INITD_SCRIPT_PATH"
 	echo '    echo "Kill Mosquitto"' >> "$INITD_SCRIPT_PATH"
-	echo '    if [ -f /tmp/mosquitto_pid ]' >> "$INITD_SCRIPT_PATH"
+	echo '    if [ -f /var/run/mosquitto.pid ]' >> "$INITD_SCRIPT_PATH"
 	echo '    then' >> "$INITD_SCRIPT_PATH"
-	echo '      PID_TO_KILL=`cat /tmp/mosquitto_pid`' >> "$INITD_SCRIPT_PATH"
+	echo '      PID_TO_KILL=`cat /var/run/mosquitto.pid`' >> "$INITD_SCRIPT_PATH"
 	echo '      kill -9 $PID_TO_KILL' >> "$INITD_SCRIPT_PATH"
-	echo '      rm /tmp/mosquitto_pid' >> "$INITD_SCRIPT_PATH"
+	echo '      rm -f /var/run/mosquitto.pid' >> "$INITD_SCRIPT_PATH"
 	echo '    fi' >> "$INITD_SCRIPT_PATH"
 	echo "" >> "$INITD_SCRIPT_PATH"
 	echo '    echo "Kill photomaton"' >> "$INITD_SCRIPT_PATH"
@@ -179,8 +179,7 @@ part2 ()
 
 	echo "function process_start {" >> "$INITD_SCRIPT_PATH"
 	echo '    mosquitto -d -c /etc/mosquitto/mosquitto.conf' >> "$INITD_SCRIPT_PATH"
-	echo '    MOSQUITTO_PROC_PID=$!' >> "$INITD_SCRIPT_PATH"
-	echo '    echo "$MOSQUITTO_PROC_PID" > /tmp/mosquitto_pid' >> "$INITD_SCRIPT_PATH"
+	echo '    MOSQUITTO_PROC_PID=`cat /var/run/mosquitto.pid`' >> "$INITD_SCRIPT_PATH"
 	echo '    echo "Launch Mosquitto with PID $MOSQUITTO_PROC_PID"' >> "$INITD_SCRIPT_PATH"
 
 	echo '    nohup /usr/bin/python3 "'"$my_dir/photomaton.py"'" > /dev/null 2>&1 &' >> "$INITD_SCRIPT_PATH"
