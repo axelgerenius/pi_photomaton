@@ -10,27 +10,32 @@ from subprocess import call
 from subprocess import Popen
 from stat import *
 
-
+RAM_DISK_PATH = "/tmp/photomaton-ramdisk/"
 FILE_SAVE_PATH = "/var/photomaton-www/images/"
 FILE_SAVE_PATH_THUMBNAILS = FILE_SAVE_PATH + "thumbnails/"
-
+FILE_SAVE_PATH_RENDER = FILE_SAVE_PATH + "rendering/"
 client = mqtt.Client("pythonClient")
 
 
 def capture():
 	filename = time.strftime('%d-%m-%y_%H-%M-%S')
 
-#	ret=call(["raspistill", "-o", FILE_SAVE_PATH+filename+".jpg" ])
+#	ret=call(["raspistill", "-o", RAM_DISK_PATH+filename+".jpg" ])
 
 	# Capture
 	ret=call(["gphoto2", "--capture-image-and-download", "--filename", "/var/photomaton-www/images/"+filename+".jpg"])
 
 	# On error generate dummy file
 	if ret != 0:
-		call(["convert", "-pointsize", "120", "-font", "DejaVu-Sans", "label:"+filename, FILE_SAVE_PATH+filename+".jpg"])
+		call(["convert", "-pointsize", "120", "-font", "DejaVu-Sans", "label:"+filename, RAM_DISK_PATH+filename+".jpg"])
+
+	# Render it
+	call(["convert", "-thumbnail", "800x480", RAM_DISK_PATH+filename+".jpg", FILE_SAVE_PATH_RENDER+filename+".jpg"])
 
 	# Thumbnail it
-	p = Popen(["convert", "-thumbnail", "200x200", FILE_SAVE_PATH+filename+".jpg", FILE_SAVE_PATH_THUMBNAILS+filename+".jpg"])
+	call(["convert", "-thumbnail", "200x200", RAM_DISK_PATH+filename+".jpg", FILE_SAVE_PATH_THUMBNAILS+filename+".jpg"])
+
+	Popen(["mv", RAM_DISK_PATH+filename+".jpg", FILE_SAVE_PATH+filename+".jpg"])
 
 	client.publish("photomaton/newPhoto",filename + '.jpg')
 
@@ -65,8 +70,18 @@ def on_message(client, userdata, message):
 		print("Topic list")
 		photo_list()
 
+def ram_disk_create():
+
+	if os.path.isdir(RAM_DISK_PATH):
+		call(["umount", RAM_DISK_PATH])
+	else :
+		call(["mkdir", RAM_DISK_PATH])
+
+	call(["mount", "-t", "tmpfs", "-o", "size=20m", "tmpfs", RAM_DISK_PATH])
+
 
 def main():
+	ram_disk_create()
 	client.connect("127.0.0.1")
 	client.on_message=on_message #attach function to callback
 	client.loop_start() #start the loop
