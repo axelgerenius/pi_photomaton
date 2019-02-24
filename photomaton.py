@@ -27,7 +27,7 @@ def capture():
 
 	# On error generate dummy file
 	if ret != 0:
-		call(["convert", "-pointsize", "120", "-font", "DejaVu-Sans", "label:"+filename, FILE_SAVE_PATH+filename+".jpg"])
+		call(["convert", "-size", "1500x1000", "-pointsize", "120", "-font", "DejaVu-Sans", "label:"+filename, FILE_SAVE_PATH+filename+".jpg"])
 
 	# Thumbnail it
 	p = Popen(["convert", "-thumbnail", "200x200", FILE_SAVE_PATH+filename+".jpg", FILE_SAVE_PATH_THUMBNAILS+filename+".jpg"])

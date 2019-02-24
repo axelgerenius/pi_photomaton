@@ -78,7 +78,7 @@ export default {
       return this.page ? Number.parseInt(this.page) : 1;
     },
     totalPage() {
-      let count = Math.round(this.images.length / this.pageLimit);
+      let count = Math.trunc(this.images.length / this.pageLimit);
       if (this.images.length % this.pageLimit > 0) count += 1;
       return count;
     },

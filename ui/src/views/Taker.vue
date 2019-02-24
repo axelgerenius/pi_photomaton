@@ -1,7 +1,11 @@
 <template>
   <section id="main" class="hero is-danger is-fullheight has-text-centered">
     <div class="hero-body">
-      <countdown-bar v-if="state == 'display'" v-bind:seconds="displayTime" />
+      <countdown-bar
+        v-if="state == 'display'"
+        v-bind:seconds="displayTime"
+        v-on:end="closePhoto()"
+      />
       <div class="container">
         <transition v-bind:leave-active-class="animation" mode="out-in">
           <button
@@ -18,13 +22,6 @@
             animated="true"
             v-on:end="countdownEnded()"
           />
-          <div v-if="state == 'waiting'" class="line-scale">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
           <photo-viewer
             v-if="state == 'load' || state == 'display'"
             v-bind:src="filename"
@@ -33,18 +30,26 @@
           />
           <p v-if="state == 'error'">{{ error }}</p>
         </transition>
+        <div
+          v-if="state == 'waiting' || state == 'load'"
+          class="ball-pulse-rise"
+        >
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
         <transition enter-active-class="animated fadeIn">
-          <span
-            v-if="state == 'display' || state == 'error'"
-            v-on:click="closePhoto()"
-            class="bottomLeft icon is-large"
-          >
-            <i class="fas fa-arrow-left fa-3x"></i>
-          </span>
+          <div v-if="state == 'display' || state == 'error'" class="middleLeft">
+            <span class="icon is-large" v-on:click="closePhoto()">
+              <i class="fas fa-chevron-left fa-3x"></i>
+            </span>
+          </div>
         </transition>
       </div>
       <span
-        v-if="state == 'iddle'"
+        v-if="state == 'iddle' && galleryShow"
         v-on:click="$router.push('/gallery')"
         class="bottomRight icon is-large"
       >
@@ -55,20 +60,26 @@
 </template>
 
 <style>
+.fullScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: -webkit-fill-available;
+}
 .bottomRight {
   position: fixed;
   bottom: 0.5em;
   right: 0.5em;
 }
-.fullScreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
 .bottomLeft {
   position: fixed;
   bottom: 0.5em;
   left: 0.5em;
+}
+.middleLeft {
+  position: fixed;
+  left: 0em;
+  height: 100%;
 }
 </style>
 
@@ -95,7 +106,8 @@ export default {
       animation: "",
       countdownTime: config.countdownTime,
       countdownText: config.countdownText,
-      displayTime: config.displayTime
+      displayTime: config.displayTime,
+      galleryShow: config.galleryShow
     };
   },
   computed: {

@@ -12,7 +12,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 2px;
+  height: 0.3em;
+  z-index: 9999;
 }
 .progress::-webkit-progress-bar {
   background-color: transparent;
