@@ -1,7 +1,7 @@
 <template>
   <div>
     <transition enter-active-class="animated fadeIn">
-      <figure v-show="show">
+      <figure v-show="isLoaded">
         <img
           v-bind:src="file"
           v-on:load="showPhoto()"
@@ -15,12 +15,15 @@
 
 <style scoped>
 figure {
-  padding: 1em 1em 2.6em 1em;
-  background: white;
-  margin: 1em;
-  border: 1px #ccc solid;
+  /*padding: 1em 1em 2.6em 1em;
+  background: white;*/
+  margin: 10px;
+  /*border: 1px #ccc solid;*/
 }
 img {
+  max-height: -webkit-fill-available;
+  display: block;
+  margin: auto;
 }
 </style>
 
@@ -31,7 +34,7 @@ export default {
   data() {
     return {
       file: "",
-      show: false,
+      isLoaded: false,
       error: false
     };
   },
@@ -54,12 +57,12 @@ export default {
   },
   methods: {
     loadPhoto(file) {
-      this.show = false;
+      this.isLoaded = false;
       this.error = false;
       this.file = file;
     },
     showPhoto() {
-      this.show = true;
+      this.isLoaded = true;
       this.$emit("load");
     },
     showError() {
