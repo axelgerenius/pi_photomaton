@@ -90,6 +90,7 @@ part1 ()
 	git clone https://github.com/warmcat/libwebsockets.git
 	EchoStatus $? "Fetch libwebsockets"
 	cd libwebsockets
+	git checkout v3.1-stable
 	mkdir build
 	cd build
 	cmake .. && sudo make install && sudo ldconfig
