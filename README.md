@@ -53,8 +53,18 @@ mosquitto_sub --host localhost --topic "#"
 
 
 ## Open ui
+Put in
 ```
-DISPLAY=:0 chromium-browser --app=http://localhost:8081 --start-fullscreen
+ /home/pi/.config/lxsession/LXDE-pi/autostart
+```
+```
+
+@xset s off
+@xset -dpms
+@xset s noblank
+@unclutter
+@chromium-browser --app=http://localhost:80 --start-fullscreen
+
 ```
 
 ## Docker
