@@ -23,6 +23,8 @@ export default {
   buttonType: "icon",
   buttonText: "Take photo",
   buttonIcon: "fa-camera",
+  backgroundDuration: 10,
+  backgroundImages: [],
 
   //
   displayTime: 30,
