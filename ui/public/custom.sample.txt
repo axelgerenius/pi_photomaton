@@ -1,0 +1,29 @@
+{
+  //
+  // Time (in seconds)
+  "countdownTime": 5,
+
+  //
+  // Text diplayed at countdown end's
+  "countdownText": "Say cheese !",
+
+  //
+  // Time the photo is displayed (in seconds)
+  "displayTime": 30,
+
+  //
+  // Display or not the button to access the gallery
+  "galleryShow": false,
+
+  //
+  // Values : text, icon
+  "buttonType": "text",
+
+  //
+  //
+  "buttonText": "Take photo",
+
+  //
+  // Icon font-awesome
+  "buttonIcon": "fa-camera"
+}

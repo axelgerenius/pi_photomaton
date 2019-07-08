@@ -12,8 +12,14 @@
             v-if="state == 'iddle'"
             v-on:click="buttonPressed()"
             class="button is-primary is-large"
+            v-bind:class="{ 'is-circle': isIcon }"
           >
-            Take photo
+            <span v-if="isIcon" class="icon is-large">
+              <i class="fas fa-2x" v-bind:class="buttonIcon"></i>
+            </span>
+            <span v-else>
+              {{ buttonText }}
+            </span>
           </button>
           <countdown
             v-if="state == 'countdown'"
@@ -26,6 +32,7 @@
             v-if="state == 'load' || state == 'display'"
             v-bind:src="filename"
             v-on:load="photoLoaded()"
+            v-on:fail="closePhoto()"
             class="fullScreen"
           />
           <p v-if="state == 'error'">{{ error }}</p>
@@ -81,11 +88,14 @@
   left: 0em;
   height: 100%;
 }
+.button.is-circle {
+  border-radius: 9999px;
+  height: 4em;
+  width: 4em;
+}
 </style>
 
 <script>
-import config from "../config.js";
-
 import Countdown from "../components/Countdown.vue";
 import CountdownBar from "../components/CountdownBar.vue";
 import PhotoViewer from "../components/PhotoViewer.vue";
@@ -104,10 +114,12 @@ export default {
       filename: "",
       triggerTime: null,
       animation: "",
-      countdownTime: config.countdownTime,
-      countdownText: config.countdownText,
-      displayTime: config.displayTime,
-      galleryShow: config.galleryShow
+      countdownTime: this.$config.countdownTime,
+      countdownText: this.$config.countdownText,
+      buttonText: this.$config.buttonText,
+      buttonIcon: this.$config.buttonIcon,
+      displayTime: this.$config.displayTime,
+      galleryShow: this.$config.galleryShow
     };
   },
   computed: {
@@ -119,35 +131,40 @@ export default {
         default:
           return "";
       }
+    },
+    isIcon() {
+      return this.$config.buttonType != "text";
     }
   },
   mounted() {
     this.$mqtt.on("message", (topic, message, packet) => {
       console.log(topic, message.toString(), packet);
       switch (topic) {
-        case config.mqttTopicButton:
+        case this.$config.mqttTopicButton:
           this.setState("countdown");
           break;
 
-        case config.mqttTopicTakePhoto:
+        case this.$config.mqttTopicTakePhoto:
           this.waitPhoto = true;
           setTimeout(() => this.waitReponse(), 2000);
           setTimeout(() => this.noResponse(), 12000);
           break;
 
-        case config.mqttTopicPhotoTaken:
+        case this.$config.mqttTopicPhotoTaken:
           this.waitPhoto = false;
           this.setState("load");
-          this.filename = `http://${config.host}/images/${message.toString()}`;
+          this.filename = `http://${
+            this.$config.host
+          }/images/${message.toString()}`;
           break;
 
         default:
           break;
       }
     });
-    this.$mqtt.subscribe(config.mqttTopicButton);
-    this.$mqtt.subscribe(config.mqttTopicPhotoTaken);
-    this.$mqtt.subscribe(config.mqttTopicTakePhoto);
+    this.$mqtt.subscribe(this.$config.mqttTopicButton);
+    this.$mqtt.subscribe(this.$config.mqttTopicPhotoTaken);
+    this.$mqtt.subscribe(this.$config.mqttTopicTakePhoto);
   },
   methods: {
     init() {
@@ -157,11 +174,11 @@ export default {
     },
     buttonPressed() {
       this.triggerTime = Date.now().toString();
-      this.$mqtt.publish(config.mqttTopicButton, this.triggerTime);
+      this.$mqtt.publish(this.$config.mqttTopicButton, this.triggerTime);
     },
     countdownEnded() {
       if (this.triggerTime != null) {
-        this.$mqtt.publish(config.mqttTopicTakePhoto, this.triggerTime);
+        this.$mqtt.publish(this.$config.mqttTopicTakePhoto, this.triggerTime);
         this.triggerTime = null;
       }
     },

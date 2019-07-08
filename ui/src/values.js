@@ -18,6 +18,13 @@ export default {
   // COUNTDOWNS
   countdownTime: 5,
   countdownText: "Say cheese !",
+
+  //
+  buttonType: "icon",
+  buttonText: "Take photo",
+  buttonIcon: "fa-camera",
+
+  //
   displayTime: 30,
 
   galleryShow: false
