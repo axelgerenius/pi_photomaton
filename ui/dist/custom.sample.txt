@@ -24,11 +24,19 @@
   "buttonText": "Take photo",
 
   //
-  // Icon font-awesome
-  "buttonIcon": "fa-camera"
+  // Css color
+  "buttonColor": "red",
 
+  //
+  // Icon font-awesome
+  "buttonIcon": "fa-camera",
+
+  //
+  //
   "backgroundDuration": 5,
   
+  //
+  //
   "backgroundImages": [
     "images/back1.jpg",
     "images/back2.jpg",
