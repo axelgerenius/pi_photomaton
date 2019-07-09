@@ -13,6 +13,7 @@
             v-on:click="buttonPressed()"
             class="button is-primary is-large"
             v-bind:class="{ 'is-circle': isIcon }"
+            v-bind:style="buttonStyle"
           >
             <span v-if="isIcon" class="icon is-large">
               <i class="fas fa-2x" v-bind:class="buttonIcon"></i>
@@ -93,6 +94,9 @@
   height: 4em;
   width: 4em;
 }
+.button:hover {
+  filter: brightness(85%);
+}
 </style>
 
 <script>
@@ -118,6 +122,7 @@ export default {
       countdownText: this.$config.countdownText,
       buttonText: this.$config.buttonText,
       buttonIcon: this.$config.buttonIcon,
+      buttonColor: this.$config.buttonColor,
       displayTime: this.$config.displayTime,
       galleryShow: this.$config.galleryShow
     };
@@ -134,6 +139,10 @@ export default {
     },
     isIcon() {
       return this.$config.buttonType != "text";
+    },
+    buttonStyle() {
+      if (this.buttonColor) return `background-color: ${this.buttonColor};`
+      return "";
     }
   },
   mounted() {
