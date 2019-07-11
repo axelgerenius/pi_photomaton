@@ -1,5 +1,6 @@
 <template>
   <div>
+    <background v-if="this.$config.backgroundImages.length > 0"></background>
     <div
       v-if="!connected"
       id="health"
@@ -56,8 +57,13 @@ body {
 </style>
 
 <script>
+import Background from "./components/Background.vue";
+
 export default {
   name: "app",
+  components: {
+    Background
+  },
   data() {
     return {
       connected: false

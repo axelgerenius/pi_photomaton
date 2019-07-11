@@ -60,8 +60,6 @@
 </style>
 
 <script>
-import config from "../config.js";
-
 export default {
   name: "gallery",
   props: ["page"],
@@ -69,7 +67,7 @@ export default {
     return {
       isLoading: true,
       images: [],
-      path: `http://${config.host}/images/`,
+      path: `http://${this.$config.host}/images/`,
       pageLimit: 15
     };
   },
@@ -97,7 +95,7 @@ export default {
     this.$mqtt.on("message", (topic, message, packet) => {
       console.log(topic, message.toString(), packet);
       switch (topic) {
-        case config.mqttTopicListResult:
+        case this.$config.mqttTopicListResult:
           this.images = JSON.parse(message.toString());
           this.isLoading = false;
           break;
@@ -106,9 +104,9 @@ export default {
           break;
       }
     });
-    this.$mqtt.subscribe(config.mqttTopicListAsk);
-    this.$mqtt.subscribe(config.mqttTopicListResult);
-    this.$mqtt.publish(config.mqttTopicListAsk);
+    this.$mqtt.subscribe(this.$config.mqttTopicListAsk);
+    this.$mqtt.subscribe(this.$config.mqttTopicListResult);
+    this.$mqtt.publish(this.$config.mqttTopicListAsk);
   },
   methods: {
     goNext() {

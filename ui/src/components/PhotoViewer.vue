@@ -67,6 +67,9 @@ export default {
     },
     showError() {
       this.error = true;
+      setTimeout(() => {
+        this.$emit("fail");
+      }, 10000);
     }
   }
 };
