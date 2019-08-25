@@ -4,6 +4,10 @@ Install a photobooth system on a raspberry PI.
 It comes bundled with a wifi AP routeur (eth -> wifi), an NGINX webserver, an MQTT broker with websockt support,
 Samba fileshare, python business logic, html/javascript web UI to be screened on the device.
 
+### Hardware casing with touchscreen
+
+
+<img src="https://github.com/axelgerenius/pi_photomaton/blob/master_v2/20190807_195312.jpg" alt="drawing" width="200"/>
 
 ## Installation
 
